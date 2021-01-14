@@ -42,7 +42,9 @@ namespace JSoft.QueryExtensions
 
         public static Expression<Func<T, bool>> CombineExpressions<T>(Expression<Func<T, bool>> expr1, Expression<Func<T, bool>> expr2, Operators combinator, ParameterExpression parameter)
         {
-            return combinator == Operators.And ? Expression.Lambda<Func<T, bool>>(Expression.AndAlso(expr1.Body, expr2.Body), parameter) : Expression.Lambda<Func<T, bool>>(Expression.OrElse(expr1.Body, expr2.Body), parameter);
+            return combinator == Operators.And ? 
+                Expression.Lambda<Func<T, bool>>(Expression.AndAlso(expr1.Body, expr2.Body), parameter) : 
+                Expression.Lambda<Func<T, bool>>(Expression.OrElse(expr1.Body, expr2.Body), parameter);
         }
 
         static Expression<Func<T, bool>> GetExpression<T>(IEnumerable<Filter> filters)
