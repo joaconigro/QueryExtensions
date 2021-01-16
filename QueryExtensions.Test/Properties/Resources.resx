@@ -190,6 +190,14 @@
     }
 }</value>
   </data>
+  <data name="EnumFilter" xml:space="preserve">
+    <value>{
+    "targetType": {
+        "filterType": "enum",
+        "filter": "1;2"
+    }
+}</value>
+  </data>
   <data name="SimpleFilter" xml:space="preserve">
     <value>{
     "fullName": {

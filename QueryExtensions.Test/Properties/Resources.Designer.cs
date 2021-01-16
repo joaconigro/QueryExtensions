@@ -145,6 +145,20 @@ namespace QueryExtensions.Test.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///    &quot;targetType&quot;: {
+        ///        &quot;filterType&quot;: &quot;enum&quot;,
+        ///        &quot;filter&quot;: &quot;1;2&quot;
+        ///    }
+        ///}.
+        /// </summary>
+        internal static string EnumFilter {
+            get {
+                return ResourceManager.GetString("EnumFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///    &quot;fullName&quot;: {
         ///        &quot;filterType&quot;: &quot;text&quot;,
         ///        &quot;type&quot;: &quot;contains&quot;,
