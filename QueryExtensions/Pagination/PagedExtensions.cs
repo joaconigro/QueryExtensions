@@ -21,9 +21,10 @@ namespace JSoft.QueryExtensions
         /// <returns>The <see cref="Task{PagedList{T}}"/>.</returns>
         public static async Task<PagedList<T>> ToPagedListAsync<T>(this IQueryable<T> source, int pageNumber, int pageSize)
         {
+            CheckNullSource(source);
             var count = source.LongCount();
             var skip = CalculateSkip(count, pageNumber, pageSize);
-            var items = await source.Skip(skip).Take(pageSize).ToListAsync();
+            var items = await source.Skip(skip).Take(pageSize).ToListAsyncSafe();
 
             return new PagedList<T>(items, count, pageNumber, pageSize);
         }
@@ -42,9 +43,10 @@ namespace JSoft.QueryExtensions
         /// <returns>The <see cref="Task{PagedList{TResult}}"/>.</returns>
         public static async Task<PagedList<TResult>> ToPagedListAsync<TSource, TResult>(this IQueryable<TSource> source, int pageNumber, int pageSize, Func<TSource, TResult> selector)
         {
+            CheckNullSource(source);
             var count = source.LongCount();
             var skip = CalculateSkip(count, pageNumber, pageSize);
-            var items = await source.Skip(skip).Take(pageSize).ToListAsync();
+            var items = await source.Skip(skip).Take(pageSize).ToListAsyncSafe();
 
             return new PagedList<TResult>(items.Select(selector), count, pageNumber, pageSize);
         }
@@ -59,6 +61,7 @@ namespace JSoft.QueryExtensions
         /// <returns>The <see cref="PagedList{T}"/>.</returns>
         public static PagedList<T> ToPagedList<T>(this IEnumerable<T> source, int pageNumber, int pageSize)
         {
+            CheckNullSource(source);
             var count = source.LongCount();
             var skip = CalculateSkip(count, pageNumber, pageSize);
             var items = source.Skip(skip).Take(pageSize).ToList();
@@ -80,11 +83,28 @@ namespace JSoft.QueryExtensions
         /// <returns>The <see cref="PagedList{TResult}"/>.</returns>
         public static PagedList<TResult> ToPagedList<TSource, TResult>(this IEnumerable<TSource> source, int pageNumber, int pageSize, Func<TSource, TResult> selector)
         {
+            CheckNullSource(source);
             var count = source.LongCount();
             var skip = CalculateSkip(count, pageNumber, pageSize);
             var items = source.Skip(skip).Take(pageSize).ToList();
 
             return new PagedList<TResult>(items.Select(selector), count, pageNumber, pageSize);
+        }
+
+        static void CheckNullSource<TSource>(IEnumerable<TSource> source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source), "can't be null");
+            }
+        }
+
+        static void CheckNullSource<TSource>(IQueryable<TSource> source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source), "can't be null");
+            }
         }
 
         /// <summary>
@@ -94,11 +114,11 @@ namespace JSoft.QueryExtensions
         /// <param name="pageNumber">The current page number.</param>
         /// <param name="pageSize">The page size.</param>
         /// <returns>The <see cref="int"/>.</returns>
-        internal static int CalculateSkip(long count, int pageNumber, int pageSize)
+        static int CalculateSkip(long count, int pageNumber, int pageSize)
         {
-            if (pageNumber < 1 || pageSize < 0)
+            if (pageNumber < 1 || pageSize < 1)
             {
-                throw new ArgumentException("pageNumber argument must be >= 1 and pageSize must be > 0");
+                throw new ArgumentException("Both, pageNumber and pageSize must be greater than 0");
             }
 
             var skip = (pageNumber - 1) * pageSize;
@@ -106,7 +126,7 @@ namespace JSoft.QueryExtensions
             {
                 return skip;
             }
-            return 0;
+            return (int)count;
         }
     }
 }
