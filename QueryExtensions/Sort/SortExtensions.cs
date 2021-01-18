@@ -36,6 +36,11 @@ namespace JSoft.QueryExtensions
         /// <returns>The <see cref="IQueryable{T}"/>.</returns>
         static IQueryable<T> Sort<T>(this IQueryable<T> source, OrderOptions options)
         {
+            if(source == null)
+            {
+                throw new ArgumentNullException(nameof(source), "can't be null");
+            }
+
             //Try to get the property. If the property can't be found, the same source will be returned.
             var type = typeof(T);
             var property = type.GetProperty(options.PropertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
