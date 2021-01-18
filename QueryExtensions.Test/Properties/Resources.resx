@@ -207,4 +207,22 @@
     }
 }</value>
   </data>
+  <data name="StringContainsOrEndsWith" xml:space="preserve">
+    <value>{
+    "surname": {
+        "filterType": "text",
+        "operator": "OR",
+        "condition1": {
+            "filterType": "text",
+            "type": "contains",
+            "filter": "e"
+        },
+        "condition2": {
+            "filterType": "text",
+            "type": "endsWith",
+            "filter": "n"
+        }
+    }
+}</value>
+  </data>
 </root>

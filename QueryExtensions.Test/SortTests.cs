@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace QueryExtensions.Test
 {
-    public class SortTest
+    public class SortTests
     {
         List<Person> NullPeople;
         IQueryable<Person> NullPeopleQuery;

@@ -118,15 +118,16 @@ namespace JSoft.QueryExtensions
 
             //Creates two constants expressions to compare with filter values.
             Expression constant1, constant2;
+            var (f1, f2) = ConvertTypes(PropertyInfo.PropertyType);
             if (IsNullableType())
             {
-                constant1 = Expression.Convert(Expression.Constant(Filter), MemberExpression.Type);
-                constant2 = Expression.Convert(Expression.Constant(FilterTo), MemberExpression.Type);
+                constant1 = Expression.Convert(Expression.Constant(f1), MemberExpression.Type);
+                constant2 = Expression.Convert(Expression.Constant(f2), MemberExpression.Type);
             }
             else
             {
-                constant1 = Expression.Constant(Filter);
-                constant2 = Expression.Constant(FilterTo);
+                constant1 = Expression.Constant(f1);
+                constant2 = Expression.Constant(f2);
             }
 
             //Creates the body expression.
@@ -142,6 +143,58 @@ namespace JSoft.QueryExtensions
             };
 
             return Expression.Lambda<Func<T, bool>>(body, parameter);
+        }
+
+        Tuple<object, object> ConvertTypes(Type type)
+        {
+            object f1, f2;
+            if (type == typeof(int))
+            {
+                f1 = Filter.HasValue ? Convert.ToInt32(Filter) : new int?();
+                f2 = FilterTo.HasValue ? Convert.ToInt32(FilterTo) : new int?();
+            }
+            else if (type == typeof(short))
+            {
+                f1 = Filter.HasValue ? Convert.ToInt16(Filter) : new short?();
+                f2 = FilterTo.HasValue ? Convert.ToInt16(FilterTo) : new short?();
+            }
+            else if (type == typeof(long))
+            {
+                f1 = Filter.HasValue ? Convert.ToInt64(Filter) : new long?();
+                f2 = FilterTo.HasValue ? Convert.ToInt64(FilterTo) : new long?();
+            }
+            else if (type == typeof(uint))
+            {
+                f1 = Filter.HasValue ? Convert.ToUInt32(Filter) : new uint?();
+                f2 = FilterTo.HasValue ? Convert.ToUInt32(FilterTo) : new uint?();
+            }
+            else if (type == typeof(ushort))
+            {
+                f1 = Filter.HasValue ? Convert.ToUInt16(Filter) : new ushort?();
+                f2 = FilterTo.HasValue ? Convert.ToUInt16(FilterTo) : new ushort?();
+            }
+            else if (type == typeof(ulong))
+            {
+                f1 = Filter.HasValue ? Convert.ToUInt64(Filter) : new ulong?();
+                f2 = FilterTo.HasValue ? Convert.ToUInt64(FilterTo) : new ulong?();
+            }
+            else if (type == typeof(float))
+            {
+                f1 = Filter.HasValue ? Convert.ToSingle(Filter) : new float?();
+                f2 = FilterTo.HasValue ? Convert.ToSingle(FilterTo) : new float?();
+            }
+            else if (type == typeof(decimal))
+            {
+                f1 = Filter.HasValue ? Convert.ToDecimal(Filter) : new decimal?();
+                f2 = FilterTo.HasValue ? Convert.ToDecimal(FilterTo) : new decimal?();
+            }
+            else
+            {
+                f1 = Filter;
+                f2 = FilterTo;
+            }
+
+            return new Tuple<object, object>(f1, f2);
         }
 
         public override IFilterCondition Clone()

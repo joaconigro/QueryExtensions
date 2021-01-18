@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace QueryExtensions.Test
 {
-    public class PaginationTest
+    public class PaginationTests
     {
         List<int> Integers;
         List<int> NullList;

@@ -171,5 +171,29 @@ namespace QueryExtensions.Test.Properties {
                 return ResourceManager.GetString("SimpleFilter", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///    &quot;surname&quot;: {
+        ///        &quot;filterType&quot;: &quot;text&quot;,
+        ///        &quot;operator&quot;: &quot;OR&quot;,
+        ///        &quot;condition1&quot;: {
+        ///            &quot;filterType&quot;: &quot;text&quot;,
+        ///            &quot;type&quot;: &quot;contains&quot;,
+        ///            &quot;filter&quot;: &quot;e&quot;
+        ///        },
+        ///        &quot;condition2&quot;: {
+        ///            &quot;filterType&quot;: &quot;text&quot;,
+        ///            &quot;type&quot;: &quot;endsWith&quot;,
+        ///            &quot;filter&quot;: &quot;n&quot;
+        ///        }
+        ///    }
+        ///}.
+        /// </summary>
+        internal static string StringContainsOrEndsWith {
+            get {
+                return ResourceManager.GetString("StringContainsOrEndsWith", resourceCulture);
+            }
+        }
     }
 }
