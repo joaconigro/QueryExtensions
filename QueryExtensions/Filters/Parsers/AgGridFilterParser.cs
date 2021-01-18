@@ -6,7 +6,11 @@ namespace JSoft.QueryExtensions
 {
     public static class AgGridFilterParser
     {
-
+        /// <summary>
+        /// Parse a list of Ag-Grid filter in json format and returns a list of <see cref="Filter"/>.
+        /// </summary>
+        /// <param name="filters">The Ag-Grid filter in json format</param>
+        /// <returns>A list of <see cref="Filter"/>.</returns>
         public static List<Filter> Parse(string filters)
         {
             var dataFilters = new List<Filter>();
@@ -16,26 +20,30 @@ namespace JSoft.QueryExtensions
                 var properties = dict.RootElement.EnumerateObject().ToList();
                 foreach (var property in properties)
                 {
-                    dataFilters.Add(ParseJsonProperty(property));
+                    var filter = ParseJsonPropertyAsFilter(property);
+                    if (filter != null && filter.Conditions.Any())
+                    {
+                        dataFilters.Add(filter);
+                    }
                 }
             }
             return dataFilters;
         }
 
-        static Filter ParseJsonProperty(JsonProperty property)
+        static Filter ParseJsonPropertyAsFilter(JsonProperty property)
         {
             var filter = new Filter
             {
                 Property = property.Name
             };
 
-            switch (property.Value.ValueKind)
+            if (property.Value.ValueKind == JsonValueKind.Object)
             {
-                case JsonValueKind.Object:
-                    filter.AddRange(ParseTokenToCondition(property.Name, filter, property.Value.EnumerateObject().ToList()));
-                    break;
-                default:
-                    break;
+                filter.AddRange(ParseTokenToCondition(property.Name, filter, property.Value.EnumerateObject().ToList()));
+            }
+            else
+            {
+                return null;
             }
 
             return filter;
